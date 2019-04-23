@@ -1,0 +1,49 @@
+buildscript {
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencies {
+        /**
+         * joobyRun
+         */
+        classpath group: 'org.jooby', name: 'jooby-gradle-plugin', version: '1.6.0'
+    }
+}
+
+/* * We are writing a standalone application. */
+apply plugin: 'application'
+
+apply plugin: 'jooby'
+
+/* * Some classic project configuration. */
+version = 0.1
+mainClassName = "my.package.Main"
+sourceCompatibility = 1.8
+
+/* * Dependencies will be downloaded from the Maven repository. */
+repositories {
+    mavenCentral()
+}
+
+/* * A minimal project needs the framework and a webserver. */
+dependencies {
+    compile group: 'org.jooby', name: 'jooby', version: '1.6.0'
+    compile group: 'org.jooby', name: 'jooby-netty', version: '1.6.0'
+
+    /* * If using netty and getting native-epoll related errors ensure you have the native transport as an * included dependancy for your platform. */
+
+    // Using linux
+    compile group:'io.netty', name: 'netty-transport-native-epoll', version: '4.1.12.Final', classifier: 'linux-x86_64'
+
+    // Using macos
+    compile group:'io.netty', name: 'netty-transport-native-epoll', version: '4.1.12.Final', classifier: 'macos-x86_64'
+
+}
+
+/* * We diverge from the default resources structure to adopt the Jooby standard. */
+sourceSets.main.resources {
+    srcDirs = ['conf', 'public']
+}
