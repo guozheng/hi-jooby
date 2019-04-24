@@ -1,7 +1,6 @@
 buildscript {
 
     repositories {
-        mavenLocal()
         mavenCentral()
     }
 
@@ -9,38 +8,46 @@ buildscript {
         /**
          * joobyRun
          */
-        classpath group: 'org.jooby', name: 'jooby-gradle-plugin', version: '1.6.0'
+        classpath 'com.google.gradle:osdetector-gradle-plugin:1.6.2'
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.3.RELEASE"
+        classpath 'org.jooby:jooby-gradle-plugin:1.6.0'
     }
 }
 
 /* * We are writing a standalone application. */
+apply plugin: "io.spring.dependency-management"
+apply plugin: "com.google.osdetector"
 apply plugin: 'application'
-
 apply plugin: 'jooby'
 
 /* * Some classic project configuration. */
 version = 0.1
-mainClassName = "my.package.Main"
+mainClassName = "hi.jooby.App"
 sourceCompatibility = 1.8
 
 /* * Dependencies will be downloaded from the Maven repository. */
 repositories {
+    mavenLocal()
     mavenCentral()
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.jooby:jooby-bom:1.6.0"
+    }
 }
 
 /* * A minimal project needs the framework and a webserver. */
 dependencies {
-    compile group: 'org.jooby', name: 'jooby', version: '1.6.0'
-    compile group: 'org.jooby', name: 'jooby-netty', version: '1.6.0'
+    compile 'org.jooby:jooby:1.6.0'
+    compile 'org.jooby:jooby-netty:1.6.0'
+    compile "io.netty:netty-transport-native-epoll:${dependencyManagement.importedProperties['netty.version']}:${osdetector.classifier.contains('linux') ? 'linux-x86_64' : ''}"
+    compile "io.netty:netty-tcnative-boringssl-static:${dependencyManagement.importedProperties['boringssl.version']}"
 
-    /* * If using netty and getting native-epoll related errors ensure you have the native transport as an * included dependancy for your platform. */
+    compile 'ch.qos.logback:logback-classic:1.2.3'
 
-    // Using linux
-    compile group:'io.netty', name: 'netty-transport-native-epoll', version: '4.1.12.Final', classifier: 'linux-x86_64'
-
-    // Using macos
-    compile group:'io.netty', name: 'netty-transport-native-epoll', version: '4.1.12.Final', classifier: 'macos-x86_64'
-
+    testCompile 'org.testng:testng:6.14.3'
+    testCompile 'io.rest-assured:rest-assured:3.3.0'
 }
 
 /* * We diverge from the default resources structure to adopt the Jooby standard. */

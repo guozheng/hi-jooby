@@ -3,12 +3,21 @@
  */
 package hi.jooby;
 
+import static io.restassured.RestAssured.get;
+import static org.hamcrest.Matchers.equalTo;
+import org.jooby.test.JoobyRule;
 import org.testng.annotations.*;
-import static org.testng.Assert.*;
 
 public class AppTest {
-    @Test public void appHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
+
+    public static JoobyRule app = new JoobyRule(new App());
+
+    @Test
+    public void appHasAGreeting() {
+        get("/")
+                .then()
+                .assertThat()
+                .body(equalTo("Hello Jooby!"))
+                .statusCode(200);
     }
 }

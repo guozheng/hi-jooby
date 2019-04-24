@@ -3,12 +3,22 @@
  */
 package hi.jooby;
 
-public class App {
-    public String getGreeting() {
-        return "Hello world.";
+import org.jooby.Jooby;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class App extends Jooby {
+    Logger logger = LoggerFactory.getLogger(App.class);
+
+    {
+        get(req -> {
+            String name = req.param("name").value("Jooby");
+            logger.info("request served");
+            return "Hello " + name + "!";
+        });
     }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        run(App::new, args);
     }
 }
