@@ -3,19 +3,22 @@
  */
 package hi.jooby;
 
+import hi.jooby.module.SayHiModule;
 import org.jooby.Jooby;
+import org.jooby.RequestLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.ZoneId;
+
 public class App extends Jooby {
-    Logger logger = LoggerFactory.getLogger(App.class);
 
     {
-        get(req -> {
-            String name = req.param("name").value("Jooby");
-            logger.info("request served");
-            return "Hello " + name + "!";
-        });
+        use("*", new RequestLogger()
+            .dateFormatter(ZoneId.of("UTC"))
+                .extended()
+        );
+        use(new SayHiModule());
     }
 
     public static void main(String[] args) {
