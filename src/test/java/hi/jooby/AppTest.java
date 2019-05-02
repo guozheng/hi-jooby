@@ -14,10 +14,10 @@ public class AppTest {
 
     @Test
     public void appHasAGreeting() {
-        get("/")
+        get("/hi")
                 .then()
                 .assertThat()
-                .body(equalTo("Hello Jooby!"))
+                .body(equalTo("Hi!"))
                 .statusCode(200);
     }
 }

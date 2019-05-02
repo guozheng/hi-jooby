@@ -18,6 +18,7 @@ public class App extends Jooby {
             .dateFormatter(ZoneId.of("UTC"))
                 .extended()
         );
+
         use(new SayHiModule());
     }
 

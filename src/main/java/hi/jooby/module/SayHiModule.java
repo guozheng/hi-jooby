@@ -2,7 +2,6 @@ package hi.jooby.module;
 
 import com.google.inject.Binder;
 import com.typesafe.config.Config;
-import hi.jooby.App;
 import org.jooby.Env;
 import org.jooby.Jooby;
 import org.jooby.Router;
@@ -25,6 +24,7 @@ public class SayHiModule implements Jooby.Module {
     @Override
     public void configure(Env env, Config conf, Binder binder) throws Throwable {
         Router router = env.router();
-        router.get("/hi", () -> "hi!");
+        String name = conf.getString("name");
+        router.get("/hi", () -> "hi, " + name);
     }
 }

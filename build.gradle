@@ -1,6 +1,8 @@
 buildscript {
 
     repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+        mavenLocal()
         mavenCentral()
     }
 
@@ -11,10 +13,12 @@ buildscript {
         classpath 'com.google.gradle:osdetector-gradle-plugin:1.6.2'
         classpath "io.spring.gradle:dependency-management-plugin:1.0.3.RELEASE"
         classpath 'org.jooby:jooby-gradle-plugin:1.6.0'
+        classpath "com.github.jengelman.gradle.plugins:shadow:4.0.1"
     }
 }
 
 /* * We are writing a standalone application. */
+apply plugin: "com.github.johnrengelman.shadow"
 apply plugin: "io.spring.dependency-management"
 apply plugin: "com.google.osdetector"
 apply plugin: 'application'
@@ -53,4 +57,13 @@ dependencies {
 /* * We diverge from the default resources structure to adopt the Jooby standard. */
 sourceSets.main.resources {
     srcDirs = ['conf', 'public']
+}
+
+joobyRun {
+    mainClassName = 'hi.jooby.App'
+    compiler = 'on'
+    includes = ['**/*.class', '**/*.conf', '**/*.properties']
+    excludes = []
+    logLevel = 'info'
+    srcExtensions = [".java", ".kt", ".conf", ".properties"]
 }
